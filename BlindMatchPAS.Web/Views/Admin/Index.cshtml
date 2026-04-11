@@ -1,0 +1,85 @@
+@model BlindMatchPAS.Web.Models.ViewModels.AdminDashboardViewModel
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-navy fw-bold">Admin Dashboard</h2>
+            <p class="text-muted">System summary and management console.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Stats Cards -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm stats-card bg-navy text-white h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="ms-3">
+                        <h6 class="text-uppercase mb-1 opacity-75">Total Users</h6>
+                        <h3 class="mb-0">@Model.TotalUsers</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm stats-card bg-success text-white h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="ms-3">
+                        <h6 class="text-uppercase mb-1 opacity-75">Proposals</h6>
+                        <h3 class="mb-0">@Model.TotalProposals</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm stats-card bg-info text-white h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="ms-3">
+                        <h6 class="text-uppercase mb-1 opacity-75">Total Matches</h6>
+                        <h3 class="mb-0">@Model.TotalMatches</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm stats-card bg-warning text-dark h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="ms-3">
+                        <h6 class="text-uppercase mb-1">Research Areas</h6>
+                        <h3 class="mb-0">@Model.TotalResearchAreas</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3 text-navy">Quick Actions</h5>
+                    <div class="list-group list-group-flush">
+                        <a asp-action="Users" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center">
+                            Manage Users <i class="bi bi-chevron-right"></i>
+                        </a>
+                        <a asp-action="ResearchAreas" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center">
+                            Manage Research Areas <i class="bi bi-chevron-right"></i>
+                        </a>
+                        <a asp-action="Allocations" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center">
+                            Allocation Oversight <i class="bi bi-chevron-right"></i>
+                        </a>
+                        <a asp-action="AuditLogs" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center">
+                            View Audit Logs <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-navy { color: #001f3f; }
+    .bg-navy { background-color: #001f3f; }
+    .stats-card { border-radius: 15px; transition: transform 0.2s; }
+    .stats-card:hover { transform: translateY(-5px); }
+</style>

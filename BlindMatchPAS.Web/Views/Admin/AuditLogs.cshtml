@@ -1,0 +1,46 @@
+@model IEnumerable<BlindMatchPAS.Core.Entities.AuditLog>
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-navy fw-bold">Audit Logs</h2>
+            <p class="text-muted">History of administrative interventions for accountability.</p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4 py-3">Timestamp</th>
+                        <th class="py-3">Admin</th>
+                        <th class="py-3">Action</th>
+                        <th class="pe-4 py-3">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 small">@log.Timestamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td><span class="badge bg-secondary">@log.AdminEmail</span></td>
+                            <td class="fw-bold">@log.Action</td>
+                            <td class="pe-4 small text-muted">@log.Details</td>
+                        </tr>
+                    }
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">No audit logs recorded yet.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-navy { color: #001f3f; }
+</style>
