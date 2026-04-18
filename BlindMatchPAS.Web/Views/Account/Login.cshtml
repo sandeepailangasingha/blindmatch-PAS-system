@@ -1,34 +1,100 @@
-﻿@model BlindMatchPAS.Web.Models.ViewModels.LoginViewModel
+@model BlindMatchPAS.Web.Models.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Log in";
+}
 
-<div class="container mt-5">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    body { 
+        background-color: #0f254c;
+        background-image: linear-gradient(rgba(15, 37, 76, 0.65), rgba(15, 37, 76, 0.85)), url('/images/campus-bg.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+    .ultra-card { background: #ffffff; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); overflow: hidden; animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    @@keyframes slideUpFade { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .ultra-header { background: #0f254c; padding: 40px 30px; position: relative; overflow: hidden; color: #ffffff; border-bottom: 5px solid #8DC63F; }
+    .header-blob { position: absolute; width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; top: -60px; right: -60px; animation: pulseBlob 5s infinite alternate ease-in-out; }
+    @@keyframes pulseBlob { 0% { transform: scale(1) translate(0, 0); } 100% { transform: scale(1.15) translate(-15px, 15px); } }
+    .logo-box { background: #8DC63F; width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 8px 16px rgba(141, 198, 63, 0.3); animation: floatLogo 3s ease-in-out infinite; }
+    @@keyframes floatLogo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    .input-wrapper { position: relative; }
+    .input-wrapper i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 1.1rem; transition: color 0.3s ease; z-index: 5; }
+    .ultra-input { width: 100%; padding: 14px 14px 14px 48px; background-color: #f3f4f6; border: 2px solid transparent; border-radius: 12px; color: #1f2937; font-size: 15px; transition: all 0.3s ease; }
+    .ultra-input:focus { background-color: #ffffff; border-color: #8DC63F; box-shadow: 0 0 0 4px rgba(141, 198, 63, 0.15); outline: none; }
+    .ultra-input:focus + i { color: #8DC63F; }
+    .ultra-btn { background: #8DC63F; color: #0f254c; font-weight: 800; border: none; border-radius: 12px; padding: 14px; font-size: 16px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .ultra-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(141, 198, 63, 0.35); background: #7ab032; color: #ffffff; }
+    .ultra-checkbox { width: 18px; height: 18px; border-radius: 5px; border: 2px solid #d1d5db; cursor: pointer; }
+    .ultra-checkbox:checked { background-color: #8DC63F; border-color: #8DC63F; }
+</style>
+
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow">
-                <div class="card-body p-4">
-                    <h3 class="text-center mb-4">Login</h3>
-                    <form asp-action="Login" method="post">
-                        <div asp-validation-summary="All" class="text-danger"></div>
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <input asp-for="RememberMe" class="form-check-input" />
-                            <label asp-for="RememberMe" class="form-check-label"></label>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
-                    </form>
-                    <div class="text-center mt-3">
-                        <a asp-action="Register">Don't have an account? Register</a>
+        <div class="col-md-6 col-lg-5 col-xl-4">
+            <div class="ultra-card">
+                <div class="ultra-header">
+                    <div class="header-blob"></div>
+                    <div class="logo-box">
+                        <i class="bi bi-layers-fill text-dark fs-4"></i>
                     </div>
+                    <h2 class="fw-bold mb-1" style="position: relative; z-index: 2;">Blind-Match PAS</h2>
+                    <p class="mb-0" style="color: #94a3b8; font-size: 0.85rem; position: relative; z-index: 2;">
+                        NSBM Green University &middot; Secure Portal
+                    </p>
                 </div>
+                <div class="card-body p-4 p-sm-5">
+                    <p class="fw-bold text-uppercase mb-4" style="font-size: 0.75rem; color: #9ca3af; letter-spacing: 1px;">Sign In To Your Account</p>
+                    <form id="account" asp-action="Login" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-bold" style="font-size: 0.9rem; color: #4b5563;">Email Address</label>
+                            <div class="input-wrapper">
+                                <input asp-for="Email" class="ultra-input" autocomplete="username" aria-required="true" placeholder="yourname@nsbm.ac.lk" />
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger" style="font-size: 0.8rem;"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label fw-bold" style="font-size: 0.9rem; color: #4b5563;">Password</label>
+                            <div class="input-wrapper">
+                                <input asp-for="Password" class="ultra-input" autocomplete="current-password" aria-required="true" placeholder="••••••••" />
+                                <i class="bi bi-lock"></i>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger" style="font-size: 0.8rem;"></span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check d-flex align-items-center gap-2">
+                                <input class="form-check-input ultra-checkbox m-0" asp-for="RememberMe" />
+                                <label class="form-check-label text-muted" asp-for="RememberMe" style="font-size: 0.9rem; margin-top: 2px;">
+                                    @Html.DisplayNameFor(m => m.RememberMe)
+                                </label>
+                            </div>
+                            <a href="#" class="fw-bold" style="color: #0f254c; text-decoration: none; font-size: 0.9rem;">Forgot Password?</a>
+                        </div>
+                        <button id="login-submit" type="submit" class="w-100 btn ultra-btn mb-4">Sign In to System</button>
+                        <div class="text-center position-relative mb-3 mt-2">
+                            <hr style="border-color: #e5e7eb; opacity: 1;">
+                            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted" style="font-size: 0.8rem;">New to the system?</span>
+                        </div>
+                        <div class="text-center">
+                            <p class="mb-0 text-muted" style="font-size: 0.95rem;">
+                                Don't have an account? 
+                                <a asp-action="Register" class="fw-bold ms-1" style="color: #0f254c; text-decoration: none;">Create Account</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <p class="text-muted" style="font-size: 0.8rem;">Powered by <span class="fw-bold text-dark">NSBM Green University</span> &middot; Plymouth University</p>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
