@@ -15,6 +15,8 @@ namespace BlindMatchPAS.Core.Entities
         public string Abstract { get; set; } = string.Empty;
 
         [Required]
+        [RegularExpression(@"^[a-zA-Z0-9\s,\.#\+]+$",
+            ErrorMessage = "Only valid tech stack characters allowed")]
         public string TechnicalStack { get; set; } = string.Empty;
 
         public string Status { get; set; } = "Pending";
