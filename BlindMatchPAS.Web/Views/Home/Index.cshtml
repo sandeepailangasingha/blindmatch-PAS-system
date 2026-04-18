@@ -1,8 +1,180 @@
-﻿@{
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    /* Hero Section Styling */
+    .hero-section {
+        background: linear-gradient(135deg, #0f254c 0%, #1a365d 100%);
+        color: white;
+        padding: 100px 0;
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 50px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .hero-blob {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(141, 198, 63, 0.15) 0%, rgba(141, 198, 63, 0) 70%);
+        border-radius: 50%;
+        top: -100px;
+        right: -100px;
+        animation: pulseHeroBlob 6s infinite alternate ease-in-out;
+    }
+    
+    @@keyframes pulseHeroBlob {
+        0% { transform: scale(1) translate(0, 0); }
+        100% { transform: scale(1.1) translate(-20px, 20px); }
+    }
+    
+    .hero-title {
+        font-weight: 800;
+        font-size: 3.5rem;
+        letter-spacing: -1px;
+        margin-bottom: 20px;
+    }
+    
+    .text-nsbm-green {
+        color: #8DC63F;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem;
+        color: #cbd5e1;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .btn-nsbm {
+        background: #8DC63F;
+        color: #0f254c;
+        font-weight: 700;
+        padding: 14px 32px;
+        border-radius: 50px;
+        border: none;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-nsbm:hover {
+        background: #7ab032;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(141, 198, 63, 0.4);
+    }
+
+    .btn-outline-light-custom {
+        border: 2px solid rgba(255,255,255,0.2);
+        color: white;
+        font-weight: 600;
+        padding: 12px 30px;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-light-custom:hover {
+        background: white;
+        color: #0f254c;
+        border-color: white;
+    }
+
+    /* Features Section */
+    .feature-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px 30px;
+        height: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+
+    .feature-icon-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+    }
+
+    .icon-student { background: rgba(15, 37, 76, 0.1); color: #0f254c; }
+    .icon-supervisor { background: rgba(141, 198, 63, 0.15); color: #7ab032; }
+    .icon-match { background: rgba(236, 72, 153, 0.1); color: #ec4899; }
+</style>
+
+<div class="container mt-4 mb-5">
+    
+    <!-- Hero Section -->
+    <div class="hero-section text-center">
+        <div class="hero-blob"></div>
+        <div class="position-relative" style="z-index: 2;">
+            <div class="mb-4 d-inline-block px-4 py-2" style="background: rgba(255,255,255,0.1); border-radius: 30px; font-size: 0.9rem; font-weight: 600; backdrop-filter: blur(10px);">
+                <i class="bi bi-shield-check text-nsbm-green me-2"></i> NSBM Official Project Allocation
+            </div>
+            <h1 class="hero-title">
+                Fair & Unbiased <br />
+                <span class="text-nsbm-green">Blind-Match</span> PAS
+            </h1>
+            <p class="hero-subtitle mb-5">
+                Connecting students' innovative project proposals with the expertise of academic supervisors, completely anonymously to ensure 100% fairness and merit-based selection.
+            </p>
+            
+            <div class="d-flex justify-content-center gap-3">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-nsbm">Go to Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-nsbm">Get Started Now</a>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light-custom">Sign In</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="feature-card text-center text-md-start">
+                <div class="feature-icon-box icon-student mx-auto mx-md-0">
+                    <i class="bi bi-journal-text"></i>
+                </div>
+                <h4 class="fw-bold mb-3" style="color: #0f254c;">Student Submission</h4>
+                <p class="text-muted mb-0">Students submit their final year project proposals tagged with relevant research areas, hiding their personal identities from the reviewers.</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="feature-card text-center text-md-start">
+                <div class="feature-icon-box icon-supervisor mx-auto mx-md-0">
+                    <i class="bi bi-incognito"></i>
+                </div>
+                <h4 class="fw-bold mb-3" style="color: #0f254c;">Anonymous Review</h4>
+                <p class="text-muted mb-0">Supervisors review projects based strictly on technical merit, tools, and research domains without knowing whose project it is.</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="feature-card text-center text-md-start">
+                <div class="feature-icon-box icon-match mx-auto mx-md-0">
+                    <i class="bi bi-stars"></i>
+                </div>
+                <h4 class="fw-bold mb-3" style="color: #0f254c;">The Blind Match</h4>
+                <p class="text-muted mb-0">Once a supervisor accepts a proposal, the system performs the "Reveal", exchanging contact details and finalizing the collaboration.</p>
+            </div>
+        </div>
+    </div>
 </div>
