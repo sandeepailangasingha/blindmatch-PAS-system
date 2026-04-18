@@ -3,57 +3,215 @@
     ViewData["Title"] = "My Proposals";
 }
 
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold" style="color:#0f254c;">My Project Proposals</h2>
-        <a asp-action="Create" class="btn"
-           style="background:#8DC63F;color:#0f254c;font-weight:700;border-radius:10px;">
-            + New Proposal
-        </a>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    body {
+        background-color: #f0f4f8;
+    }
+
+    .page-header {
+        background: linear-gradient(145deg, #0a1e3d 0%, #0f254c 100%);
+        border-radius: 20px;
+        padding: 30px 35px;
+        color: white;
+        margin-bottom: 30px;
+        border-bottom: 5px solid #8DC63F;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(141,198,63,0.08);
+            border-radius: 50%;
+            top: -60px;
+            right: -40px;
+        }
+
+    .proposal-card {
+        background: white;
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        transition: all 0.3s ease;
+        margin-bottom: 16px;
+        overflow: hidden;
+        border-left: 5px solid #e5e7eb;
+    }
+
+        .proposal-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .proposal-card.status-matched {
+            border-left-color: #8DC63F;
+        }
+
+        .proposal-card.status-review {
+            border-left-color: #ffc107;
+        }
+
+        .proposal-card.status-pending {
+            border-left-color: #6c757d;
+        }
+
+    .status-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+    }
+
+    .badge-matched {
+        background: #f0fdf4;
+        color: #166534;
+    }
+
+    .badge-review {
+        background: #fffbeb;
+        color: #92400e;
+    }
+
+    .badge-pending {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .btn-nsbm {
+        background: #8DC63F;
+        color: #0f254c;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-nsbm:hover {
+            background: #79b535;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+</style>
+
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="fw-bold mb-1">My Project Proposals</h3>
+                <p class="mb-0" style="color:#94a3b8;font-size:0.85rem;">
+                    Track and manage your submitted proposals
+                </p>
+            </div>
+            <a asp-action="Create" class="btn-nsbm btn">
+                <i class="bi bi-plus-lg me-2"></i>New Proposal
+            </a>
+        </div>
     </div>
 
+    <!-- Stats Row -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 text-center p-3" style="border-radius:12px;
+                 box-shadow:0 4px 15px rgba(0,0,0,0.06);">
+                <h4 class="fw-bold" style="color:#0f254c;">@Model.Count()</h4>
+                <p class="text-muted mb-0 small">Total Proposals</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 text-center p-3" style="border-radius:12px;
+                 box-shadow:0 4px 15px rgba(0,0,0,0.06);">
+                <h4 class="fw-bold" style="color:#8DC63F;">
+                    @Model.Count(p => p.Status == "Matched")
+                </h4>
+                <p class="text-muted mb-0 small">Matched</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 text-center p-3" style="border-radius:12px;
+                 box-shadow:0 4px 15px rgba(0,0,0,0.06);">
+                <h4 class="fw-bold" style="color:#ffc107;">
+                    @Model.Count(p => p.Status == "Pending")
+                </h4>
+                <p class="text-muted mb-0 small">Pending</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proposals List -->
     @if (!Model.Any())
     {
-        <div class="text-center py-5">
-            <p class="text-muted">No proposals yet. Click "New Proposal" to get started!</p>
+        <div class="empty-state">
+            <i class="bi bi-inbox" style="font-size:3rem;color:#d1d5db;"></i>
+            <h5 class="mt-3 fw-bold" style="color:#374151;">No Proposals Yet</h5>
+            <p class="text-muted">Click "New Proposal" to submit your first project idea!</p>
+            <a asp-action="Create" class="btn btn-nsbm mt-2">
+                <i class="bi bi-plus-lg me-2"></i>Get Started
+            </a>
         </div>
     }
     else
     {
         foreach (var item in Model)
         {
-            <div class="card mb-3" style="border-radius:12px;border:none;
-                         box-shadow:0 4px 15px rgba(0,0,0,0.08);">
+            var cardClass = item.Status == "Matched" ? "status-matched" :
+            item.Status == "Under Review" ? "status-review" : "status-pending";
+            var badgeClass = item.Status == "Matched" ? "badge-matched" :
+            item.Status == "Under Review" ? "badge-review" : "badge-pending";
+
+            <div class="proposal-card @cardClass">
                 <div class="card-body p-4">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="fw-bold" style="color:#0f254c;">@item.Title</h5>
-                        <span class="badge" style="background:
-                                    @(item.Status == "Matched" ? "#8DC63F" :
-                                                                          item.Status == "Under Review" ? "#ffc107" : "#6c757d");
-                            color:white;border-radius:8px;padding:8px 12px;">
-                    @item.Status
-                </span>
-            </div>
-            <p class="text-muted mt-2">@item.ResearchArea?.Name</p>
-            <div class="mt-3">
-                <a asp-action="Details" asp-route-id="@item.Id"
-                   class="btn btn-sm me-2"
-                   style="background:#0f254c;color:white;border-radius:8px;">
-                    View
-                </a>
-                @if (item.Status != "Matched")
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="fw-bold mb-1" style="color:#0f254c;">@item.Title</h5>
+                            <p class="text-muted mb-2 small">
+                                <i class="bi bi-tag me-1"></i>@item.ResearchArea?.Name
+                            </p>
+                        </div>
+                        <span class="status-badge @badgeClass">@item.Status</span>
+                    </div>
+
+                    <p class="text-muted small mb-3" style="
+                               overflow:hidden;display:-webkit-box;
+                               -webkit-line-clamp:2;-webkit-box-orient:vertical;">
+                        @item.Abstract
+                    </p>
+
+                    <div class="d-flex gap-2">
+                        <a asp-action="Details" asp-route-id="@item.Id"
+                           class="btn btn-sm"
+                           style="background:#0f254c;color:white;border-radius:8px;">
+                            <i class="bi bi-eye me-1"></i>View
+                        </a>
+                        @if (item.Status != "Matched")
                         {
                             <a asp-action="Edit" asp-route-id="@item.Id"
-                               class="btn btn-sm me-2"
+                               class="btn btn-sm"
                                style="background:#e9ecef;color:#0f254c;border-radius:8px;">
-                                Edit
+                                <i class="bi bi-pencil me-1"></i>Edit
                             </a>
                             <form asp-action="Withdraw" asp-route-id="@item.Id"
                                   method="post" style="display:inline;">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-sm"
-                                        style="background:#dc3545;color:white;border-radius:8px;">
-                                    Withdraw
+                                        style="background:#fee2e2;color:#dc2626;border-radius:8px;">
+                                    <i class="bi bi-trash me-1"></i>Withdraw
                                 </button>
                             </form>
                         }
