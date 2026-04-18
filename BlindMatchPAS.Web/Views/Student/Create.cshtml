@@ -1,0 +1,83 @@
+﻿@model BlindMatchPAS.Core.Entities.ProjectProposal
+@{
+    ViewData["Title"] = "Submit Proposal";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card" style="border-radius:20px;border:none;
+                 box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
+
+                <div class="p-4" style="background:#0f254c;color:white;
+                     border-bottom:5px solid #8DC63F;">
+                    <h3 class="fw-bold mb-0">Submit New Proposal</h3>
+                    <p class="mb-0 mt-1" style="color:#94a3b8;font-size:0.85rem;">
+                        Fill in your project details below
+                    </p>
+                </div>
+
+                <div class="card-body p-4 p-sm-5">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Title" class="form-label fw-bold"
+                                   style="color:#374151;">Project Title</label>
+                            <input asp-for="Title" class="form-control"
+                                   style="border-radius:10px;padding:12px;border:2px solid #e5e7eb;"
+                                   placeholder="Enter your project title" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Abstract" class="form-label fw-bold"
+                                   style="color:#374151;">Abstract</label>
+                            <textarea asp-for="Abstract" class="form-control" rows="5"
+                                      style="border-radius:10px;padding:12px;border:2px solid #e5e7eb;"
+                                      placeholder="Describe your project idea..."></textarea>
+                            <span asp-validation-for="Abstract" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="TechnicalStack" class="form-label fw-bold"
+                                   style="color:#374151;">Technical Stack</label>
+                            <input asp-for="TechnicalStack" class="form-control"
+                                   style="border-radius:10px;padding:12px;border:2px solid #e5e7eb;"
+                                   placeholder="e.g. ASP.NET Core, SQL Server, React" />
+                            <span asp-validation-for="TechnicalStack" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ResearchAreaId" class="form-label fw-bold"
+                                   style="color:#374151;">Research Area</label>
+                            <select asp-for="ResearchAreaId" asp-items="ViewBag.ResearchAreas"
+                                    class="form-select"
+                                    style="border-radius:10px;padding:12px;border:2px solid #e5e7eb;">
+                                <option value="">-- Select Research Area --</option>
+                            </select>
+                            <span asp-validation-for="ResearchAreaId" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn px-4"
+                                    style="background:#8DC63F;color:#0f254c;
+                                    font-weight:700;border-radius:10px;padding:12px 24px;">
+                                Submit Proposal
+                            </button>
+                            <a asp-action="Index" class="btn px-4"
+                               style="background:#e9ecef;color:#0f254c;
+                               border-radius:10px;padding:12px 24px;">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

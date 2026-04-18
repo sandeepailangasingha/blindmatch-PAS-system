@@ -1,0 +1,67 @@
+﻿@model BlindMatchPAS.Core.Entities.ProjectProposal
+@{
+    ViewData["Title"] = "Proposal Details";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card" style="border-radius:20px;border:none;
+                 box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
+
+                <div class="p-4" style="background:#0f254c;color:white;
+                     border-bottom:5px solid #8DC63F;">
+                    <h3 class="fw-bold mb-0">@Model.Title</h3>
+                    <span class="badge mt-2" style="background:
+                        @(Model.Status == "Matched" ? "#8DC63F" :
+                                                                       Model.Status == "Under Review" ? "#ffc107" : "#6c757d");
+                        color:white;border-radius:8px;padding:8px 12px;">
+                        @Model.Status
+                    </span>
+                </div>
+
+                <div class="card-body p-4 p-sm-5">
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold" style="color:#0f254c;">Abstract</h6>
+                        <p class="text-muted">@Model.Abstract</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold" style="color:#0f254c;">Technical Stack</h6>
+                        <p class="text-muted">@Model.TechnicalStack</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold" style="color:#0f254c;">Research Area</h6>
+                        <p class="text-muted">@Model.ResearchArea?.Name</p>
+                    </div>
+
+                    @if (Model.Status == "Matched" && ViewBag.Supervisor != null)
+                    {
+                        <div class="p-4 mt-3" style="background:#f0fdf4;
+                                 border-radius:12px;border:2px solid #8DC63F;">
+                            <h5 class="fw-bold mb-3" style="color:#0f254c;">
+                                🎉 Your Supervisor
+                            </h5>
+                            <p class="mb-1">
+                                <strong>Name:</strong> @ViewBag.Supervisor.FullName
+                            </p>
+                            <p class="mb-0">
+                                <strong>Email:</strong> @ViewBag.Supervisor.Email
+                            </p>
+                        </div>
+                    }
+
+                    <div class="mt-4">
+                        <a asp-action="Index" class="btn"
+                           style="background:#0f254c;color:white;
+                           border-radius:10px;padding:12px 24px;">
+                            ← Back to My Proposals
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
