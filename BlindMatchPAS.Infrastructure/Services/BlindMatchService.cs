@@ -1,4 +1,4 @@
-﻿using BlindMatchPAS.Core.Entities;
+using BlindMatchPAS.Core.Entities;
 using BlindMatchPAS.Core.Services;
 using BlindMatchPAS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
