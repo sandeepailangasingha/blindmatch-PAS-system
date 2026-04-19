@@ -1,4 +1,4 @@
-﻿using BlindMatchPAS.Core.Entities;
+using BlindMatchPAS.Core.Entities;
 using BlindMatchPAS.Core.Services;
 using BlindMatchPAS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +14,7 @@ namespace BlindMatchPAS.Infrastructure.Services
             _context = context;
         }
 
+        // Get proposals WITHOUT student identity - Core Blind Logic
         public async Task<IEnumerable<ProjectProposal>> GetBlindProposalsAsync(
             int? researchAreaId = null)
         {
@@ -36,11 +37,13 @@ namespace BlindMatchPAS.Infrastructure.Services
                     Status = p.Status,
                     ResearchAreaId = p.ResearchAreaId,
                     ResearchArea = p.ResearchArea,
+                    // StudentId deliberately NOT included = Blind Match!
                     StudentId = string.Empty
                 })
                 .ToListAsync();
         }
 
+        // Express Interest
         public async Task<MatchRecord> ExpressInterestAsync(
             string supervisorId, int proposalId)
         {
@@ -71,6 +74,7 @@ namespace BlindMatchPAS.Infrastructure.Services
             return match;
         }
 
+        // Confirm Match - Triggers Identity Reveal
         public async Task<MatchRecord> ConfirmMatchAsync(
             string supervisorId, int matchId)
         {
@@ -86,6 +90,7 @@ namespace BlindMatchPAS.Infrastructure.Services
             if (match.IsConfirmed)
                 return match;
 
+            // IDENTITY REVEAL TRIGGERED!
             match.IsConfirmed = true;
             match.MatchedDate = DateTime.UtcNow;
             match.ProjectProposal!.Status = "Matched";
@@ -94,6 +99,7 @@ namespace BlindMatchPAS.Infrastructure.Services
             return match;
         }
 
+        // Get Revealed Match
         public async Task<MatchRecord?> GetRevealedMatchAsync(
             string supervisorId, int matchId)
         {
@@ -109,6 +115,7 @@ namespace BlindMatchPAS.Infrastructure.Services
                     m.IsConfirmed == true);
         }
 
+        // Check if proposal already matched
         public async Task<bool> IsProposalMatchedAsync(int proposalId)
         {
             return await _context.MatchRecords
@@ -117,6 +124,7 @@ namespace BlindMatchPAS.Infrastructure.Services
                     m.IsConfirmed == true);
         }
 
+        // Get all matches for supervisor
         public async Task<IEnumerable<MatchRecord>> GetSupervisorMatchesAsync(
             string supervisorId)
         {
@@ -128,6 +136,7 @@ namespace BlindMatchPAS.Infrastructure.Services
                 .ToListAsync();
         }
 
+        // Get match for student (after reveal)
         public async Task<MatchRecord?> GetStudentMatchAsync(
             string studentId, int proposalId)
         {

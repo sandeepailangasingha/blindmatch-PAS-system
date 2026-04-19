@@ -1,5 +1,7 @@
 using BlindMatchPAS.Core.Entities;
+using BlindMatchPAS.Core.Services;
 using BlindMatchPAS.Infrastructure.Data;
+using BlindMatchPAS.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +16,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+// Blind Match Service - Dependency Injection
+builder.Services.AddScoped<IBlindMatchService, BlindMatchService>();
 
 // MVC
 builder.Services.AddControllersWithViews();
@@ -49,23 +54,6 @@ using (var scope = app.Services.CreateScope())
     {
         if (!await roleManager.RoleExistsAsync(role))
             await roleManager.CreateAsync(new IdentityRole(role));
-    }
-
-    var userManager = scope.ServiceProvider
-        .GetRequiredService<UserManager<ApplicationUser>>();
-
-    string adminEmail = "admin@blindmatch.com";
-    if (await userManager.FindByEmailAsync(adminEmail) == null)
-    {
-        var admin = new ApplicationUser
-        {
-            UserName = adminEmail,
-            Email = adminEmail,
-            FullName = "System Administrator",
-            EmailConfirmed = true
-        };
-        await userManager.CreateAsync(admin, "Admin123!");
-        await userManager.AddToRoleAsync(admin, "Admin");
     }
 }
 
