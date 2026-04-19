@@ -1,0 +1,269 @@
+﻿@model IEnumerable<BlindMatchPAS.Core.Entities.ProjectProposal>
+@{
+    ViewData["Title"] = "Advanced Search";
+    var researchAreas = ViewBag.ResearchAreas as
+        List<BlindMatchPAS.Core.Entities.ResearchArea>
+        ?? new List<BlindMatchPAS.Core.Entities.ResearchArea>();
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    body {
+        background-color: #f0f4f8;
+    }
+
+    .page-header {
+        background: linear-gradient(145deg, #0a1e3d 0%, #0f254c 100%);
+        border-radius: 20px;
+        padding: 30px 35px;
+        color: white;
+        margin-bottom: 30px;
+        border-bottom: 5px solid #8DC63F;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .search-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        margin-bottom: 24px;
+    }
+
+    .search-input {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 12px 16px;
+        transition: all 0.3s ease;
+    }
+
+        .search-input:focus {
+            border-color: #8DC63F;
+            box-shadow: 0 0 0 4px rgba(141,198,63,0.12);
+            outline: none;
+        }
+
+    .result-card {
+        background: white;
+        border-radius: 16px;
+        border: none;
+        border-left: 5px solid #8DC63F;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        transition: all 0.3s ease;
+        margin-bottom: 16px;
+    }
+
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+    .btn-search {
+        background: linear-gradient(135deg, #8DC63F, #79b535);
+        color: #0f254c;
+        font-weight: 700;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(141,198,63,0.4);
+            color: white;
+        }
+
+    .btn-reset {
+        background: #f3f4f6;
+        color: #374151;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+        .btn-reset:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+    .tech-tag {
+        background: #f3f4f6;
+        color: #374151;
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        display: inline-block;
+        margin: 2px;
+    }
+
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+</style>
+
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="d-flex align-items-center gap-3">
+            <div style="background:#8DC63F;width:46px;height:46px;
+                 border-radius:12px;display:flex;align-items:center;
+                 justify-content:center;flex-shrink:0;">
+                <i class="bi bi-search text-dark fs-5"></i>
+            </div>
+            <div>
+                <h4 class="fw-bold mb-0">Advanced Search & Filter</h4>
+                <p class="mb-0 mt-1" style="color:#94a3b8;font-size:0.83rem;">
+                    Search and filter project proposals
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="search-card">
+        <form method="get" asp-action="Index">
+            <div class="row g-3">
+
+                <!-- Keyword -->
+                <div class="col-md-6">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="bi bi-search me-1"></i>Keyword Search
+                    </label>
+                    <input type="text" name="keyword"
+                           value="@ViewBag.Keyword"
+                           class="form-control search-input"
+                           placeholder="Search title, abstract, tech stack..." />
+                </div>
+
+                <!-- Research Area -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="bi bi-tags me-1"></i>Research Area
+                    </label>
+                    <select name="researchAreaId" class="form-select search-input">
+                        <option value="">All Areas</option>
+                        @foreach (var area in researchAreas)
+                        {
+                            <option value="@area.Id"
+                                    selected="@(ViewBag.SelectedArea != null &&
+                                                                               ViewBag.SelectedArea == area.Id)">
+                            @area.Name
+                        </option>
+                                                }
+                    </select>
+                </div>
+
+                <!-- Status -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="bi bi-circle me-1"></i>Status
+                    </label>
+                    <select name="status" class="form-select search-input">
+                        <option value="">All Status</option>
+                        <option value="Pending"
+                                selected="@(ViewBag.SelectedStatus == "Pending")">
+                            Pending
+                        </option>
+                        <option value="Under Review"
+                                selected="@(ViewBag.SelectedStatus == "Under Review")">
+                            Under Review
+                        </option>
+                        <option value="Matched"
+                                selected="@(ViewBag.SelectedStatus == "Matched")">
+                            Matched
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Tech Stack -->
+                <div class="col-md-6">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="bi bi-code-slash me-1"></i>Tech Stack
+                    </label>
+                    <input type="text" name="techStack"
+                           value="@ViewBag.TechStack"
+                           class="form-control search-input"
+                           placeholder="e.g. ASP.NET, React, Python..." />
+                </div>
+
+                <!-- Buttons -->
+                <div class="col-md-6 d-flex align-items-end gap-3">
+                    <button type="submit" class="btn btn-search">
+                        <i class="bi bi-search me-2"></i>Search
+                    </button>
+                    <a asp-action="Index" class="btn btn-reset">
+                        <i class="bi bi-x-circle me-2"></i>Reset
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Count -->
+    <div class="mb-3">
+        <span class="fw-bold" style="color:#0f254c;">
+            @Model.Count() Results Found
+        </span>
+    </div>
+
+    <!-- Results -->
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 bg-white rounded-4 shadow-sm">
+            <i class="bi bi-search" style="font-size:3rem;color:#d1d5db;"></i>
+            <h5 class="mt-3 fw-bold" style="color:#374151;">No Results Found</h5>
+            <p class="text-muted">Try different search terms or filters.</p>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <div class="result-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0" style="color:#0f254c;">
+                            @item.Title
+                        </h5>
+                        <span class="status-badge"
+                              style="background:@(item.Status == "Matched" ? "#f0fdf4" :
+                                                                   item.Status == "Under Review" ? "#fffbeb" : "#f3f4f6");
+                                     color:@(item.Status == "Matched" ? "#166534" :
+                                                           item.Status == "Under Review" ? "#92400e" : "#374151");">
+                    @item.Status
+                </span>
+            </div>
+
+                    <p class="text-muted small mb-2">
+                        <i class="bi bi-tag me-1"></i>@item.ResearchArea?.Name
+                    </p>
+
+                    <p class="text-muted small mb-3" style="
+                               overflow:hidden;display:-webkit-box;
+                               -webkit-line-clamp:2;-webkit-box-orient:vertical;">
+                        @item.Abstract
+                    </p>
+
+                    <div>
+                @foreach (var tech in item.TechnicalStack
+                                .Split(',', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <span class="tech-tag">@tech.Trim()</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

@@ -31,12 +31,16 @@ namespace BlindMatchPAS.Web.Controllers
 
             if (result.Succeeded)
             {
+                // Role-based redirect after login
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
-                {
+                var roles = await _userManager.GetRolesAsync(user!);
+
+                if (roles.Contains("Admin"))
                     return RedirectToAction("Index", "Admin");
-                }
-                return RedirectToAction("Index", "Home");
+                else if (roles.Contains("Supervisor"))
+                    return RedirectToAction("Index", "Supervisor");
+                else
+                    return RedirectToAction("Index", "Student");
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
@@ -62,17 +66,16 @@ namespace BlindMatchPAS.Web.Controllers
 
             if (result.Succeeded)
             {
-                // Prevent self-registering as Admin
-                string finalRole = (model.Role == "Admin") ? "Student" : model.Role;
-                await _userManager.AddToRoleAsync(user, finalRole);
-                
+                await _userManager.AddToRoleAsync(user, model.Role);
                 await _signInManager.SignInAsync(user, false);
-                
-                if (finalRole == "Admin")
-                {
+
+                // Role-based redirect after register
+                if (model.Role == "Admin")
                     return RedirectToAction("Index", "Admin");
-                }
-                return RedirectToAction("Index", "Home");
+                else if (model.Role == "Supervisor")
+                    return RedirectToAction("Index", "Supervisor");
+                else
+                    return RedirectToAction("Index", "Student");
             }
 
             foreach (var error in result.Errors)
