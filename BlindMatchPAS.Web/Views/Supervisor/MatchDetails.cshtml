@@ -1,0 +1,198 @@
+﻿@model BlindMatchPAS.Core.Entities.MatchRecord
+@{
+    ViewData["Title"] = "Match Details";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    body {
+        background-color: #f0f4f8;
+    }
+
+    .page-header {
+        background: linear-gradient(145deg, #0a1e3d 0%, #0f254c 100%);
+        border-radius: 20px;
+        padding: 30px 35px;
+        color: white;
+        margin-bottom: 30px;
+        border-bottom: 5px solid #8DC63F;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .reveal-card {
+        background: white;
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .reveal-header {
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        border-bottom: 3px solid #8DC63F;
+        padding: 24px;
+    }
+
+    .info-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background: #f0fdf4;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .btn-back {
+        background: #0f254c;
+        color: white;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-back:hover {
+            background: #1a3a6b;
+            color: white;
+            transform: translateY(-2px);
+        }
+</style>
+
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="d-flex align-items-center gap-3">
+            <div style="background:#8DC63F;width:46px;height:46px;
+                 border-radius:12px;display:flex;align-items:center;
+                 justify-content:center;flex-shrink:0;">
+                <i class="bi bi-person-check-fill text-dark fs-5"></i>
+            </div>
+            <div>
+                <h4 class="fw-bold mb-0">Identity Revealed! 🎉</h4>
+                <p class="mb-0 mt-1" style="color:#94a3b8;font-size:0.83rem;">
+                    Match confirmed - Student details are now visible
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- Student Details -->
+        <div class="col-md-6 mb-4">
+            <div class="reveal-card">
+                <div class="reveal-header">
+                    <h5 class="fw-bold mb-0" style="color:#166534;">
+                        <i class="bi bi-person-fill me-2"></i>Student Details
+                    </h5>
+                    <p class="mb-0 mt-1 text-muted small">
+                        Identity revealed after match confirmation
+                    </p>
+                </div>
+                <div class="p-4">
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="bi bi-person" style="color:#8DC63F;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold">Full Name</small>
+                            <p class="mb-0 fw-bold" style="color:#0f254c;">
+                                @Model.ProjectProposal?.Student?.FullName
+                            </p>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="bi bi-envelope" style="color:#8DC63F;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold">Email</small>
+                            <p class="mb-0 fw-bold" style="color:#0f254c;">
+                                @Model.ProjectProposal?.Student?.Email
+                            </p>
+                        </div>
+                    </div>
+                    <div class="info-row" style="border:none;">
+                        <div class="info-icon">
+                            <i class="bi bi-calendar" style="color:#8DC63F;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold">Matched Date</small>
+                            <p class="mb-0 fw-bold" style="color:#0f254c;">
+                                @Model.MatchedDate?.ToString("dd MMM yyyy")
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Details -->
+        <div class="col-md-6 mb-4">
+            <div class="reveal-card">
+                <div class="reveal-header">
+                    <h5 class="fw-bold mb-0" style="color:#166534;">
+                        <i class="bi bi-file-earmark-text-fill me-2"></i>
+                        Project Details
+                    </h5>
+                    <p class="mb-0 mt-1 text-muted small">
+                        Full proposal information
+                    </p>
+                </div>
+                <div class="p-4">
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="bi bi-card-heading" style="color:#8DC63F;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold">Title</small>
+                            <p class="mb-0 fw-bold" style="color:#0f254c;">
+                                @Model.ProjectProposal?.Title
+                            </p>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <i class="bi bi-tags" style="color:#8DC63F;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold">Research Area</small>
+                            <p class="mb-0 fw-bold" style="color:#0f254c;">
+                                @Model.ProjectProposal?.ResearchArea?.Name
+                            </p>
+                        </div>
+                    </div>
+                    <div class="info-row" style="border:none;">
+                        <div class="info-icon">
+                            <i class="bi bi-code-slash" style="color:#8DC63F;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold">Tech Stack</small>
+                            <p class="mb-0 fw-bold" style="color:#0f254c;">
+                                @Model.ProjectProposal?.TechnicalStack
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a asp-action="MyInterests" class="btn btn-back">
+        <i class="bi bi-arrow-left me-2"></i>Back to My Interests
+    </a>
+</div>

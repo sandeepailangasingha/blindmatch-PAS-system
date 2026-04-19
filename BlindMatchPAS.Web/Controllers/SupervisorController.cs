@@ -21,12 +21,11 @@ namespace BlindMatchPAS.Web.Controllers
             _userManager = userManager;
         }
 
-        // Blind Dashboard - Anonymous proposals
+        // Blind Dashboard
         public async Task<IActionResult> Index(int? researchAreaId)
         {
             var user = await _userManager.GetUserAsync(User);
 
-            // Anonymity Filter - Student identity hidden
             var query = _context.ProjectProposals
                 .Include(p => p.ResearchArea)
                 .Where(p => p.Status == "Pending" ||
@@ -40,7 +39,6 @@ namespace BlindMatchPAS.Web.Controllers
                     p.Status,
                     ResearchAreaName = p.ResearchArea!.Name,
                     p.ResearchAreaId
-                    // StudentId deliberately excluded - Blind Match!
                 });
 
             if (researchAreaId.HasValue)
@@ -61,7 +59,6 @@ namespace BlindMatchPAS.Web.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
-            // Check if already interested
             var existing = await _context.MatchRecords
                 .FirstOrDefaultAsync(m => m.ProjectProposalId == proposalId
                     && m.SupervisorId == user!.Id);
@@ -76,7 +73,6 @@ namespace BlindMatchPAS.Web.Controllers
                 };
                 _context.MatchRecords.Add(match);
 
-                // Update status to Under Review
                 var proposal = await _context.ProjectProposals
                     .FindAsync(proposalId);
                 if (proposal != null)
@@ -88,7 +84,7 @@ namespace BlindMatchPAS.Web.Controllers
             return RedirectToAction(nameof(MyInterests));
         }
 
-        // My Interests Dashboard
+        // My Interests
         public async Task<IActionResult> MyInterests()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -102,7 +98,7 @@ namespace BlindMatchPAS.Web.Controllers
             return View(interests);
         }
 
-        // Confirm Match - Triggers Identity Reveal
+        // Confirm Match
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmMatch(int matchId)
@@ -116,7 +112,6 @@ namespace BlindMatchPAS.Web.Controllers
 
             if (match != null)
             {
-                // Identity Reveal triggered!
                 match.IsConfirmed = true;
                 match.MatchedDate = DateTime.UtcNow;
                 match.ProjectProposal!.Status = "Matched";
@@ -127,7 +122,7 @@ namespace BlindMatchPAS.Web.Controllers
             return RedirectToAction(nameof(MyInterests));
         }
 
-        // View Matched Student Details (After Reveal)
+        // Match Details - Identity Reveal
         public async Task<IActionResult> MatchDetails(int matchId)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -144,6 +139,62 @@ namespace BlindMatchPAS.Web.Controllers
             if (match == null) return NotFound();
 
             return View(match);
+        }
+
+        // Manage Research Areas
+        public async Task<IActionResult> ManageAreas()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var allAreas = await _context.ResearchAreas.ToListAsync();
+
+            var myAreaIds = await _context.SupervisorResearchAreas
+                .Where(s => s.SupervisorId == user!.Id)
+                .Select(s => s.ResearchAreaId)
+                .ToListAsync();
+
+            ViewBag.MyAreaIds = myAreaIds;
+            return View(allAreas);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddArea(int researchAreaId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var exists = await _context.SupervisorResearchAreas
+                .AnyAsync(s => s.SupervisorId == user!.Id
+                    && s.ResearchAreaId == researchAreaId);
+
+            if (!exists)
+            {
+                _context.SupervisorResearchAreas.Add(new SupervisorResearchArea
+                {
+                    SupervisorId = user!.Id,
+                    ResearchAreaId = researchAreaId
+                });
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(ManageAreas));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveArea(int researchAreaId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var area = await _context.SupervisorResearchAreas
+                .FirstOrDefaultAsync(s => s.SupervisorId == user!.Id
+                    && s.ResearchAreaId == researchAreaId);
+
+            if (area != null)
+            {
+                _context.SupervisorResearchAreas.Remove(area);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(ManageAreas));
         }
     }
 }
