@@ -75,7 +75,7 @@ namespace BlindMatchPAS.Web.Controllers
 
                 var proposal = await _context.ProjectProposals
                     .FindAsync(proposalId);
-                if (proposal != null)
+                if (proposal != null && proposal.Status == "Pending")
                     proposal.Status = "Under Review";
 
                 await _context.SaveChangesAsync();
@@ -98,7 +98,7 @@ namespace BlindMatchPAS.Web.Controllers
             return View(interests);
         }
 
-        // Confirm Match
+        // Confirm Match - Redirects to RevealedMatch
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmMatch(int matchId)
@@ -115,14 +115,15 @@ namespace BlindMatchPAS.Web.Controllers
                 match.IsConfirmed = true;
                 match.MatchedDate = DateTime.UtcNow;
                 match.ProjectProposal!.Status = "Matched";
-
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction(nameof(MyInterests));
+            // Redirect to Identity Reveal page
+            return RedirectToAction("RevealedMatch", "Match",
+                new { matchId });
         }
 
-        // Match Details - Identity Reveal
+        // Match Details
         public async Task<IActionResult> MatchDetails(int matchId)
         {
             var user = await _userManager.GetUserAsync(User);
