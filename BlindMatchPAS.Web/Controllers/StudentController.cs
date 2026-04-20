@@ -1,4 +1,4 @@
-﻿using BlindMatchPAS.Core.Entities;
+using BlindMatchPAS.Core.Entities;
 using BlindMatchPAS.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -49,6 +49,10 @@ namespace BlindMatchPAS.Web.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
+            ModelState.Remove("StudentId");
+            ModelState.Remove("Student");
+            ModelState.Remove("ResearchArea");
+
             if (ModelState.IsValid)
             {
                 model.StudentId = user!.Id;
@@ -83,6 +87,10 @@ namespace BlindMatchPAS.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProjectProposal model)
         {
+            ModelState.Remove("StudentId");
+            ModelState.Remove("Student");
+            ModelState.Remove("ResearchArea");
+
             if (ModelState.IsValid)
             {
                 _context.ProjectProposals.Update(model);
