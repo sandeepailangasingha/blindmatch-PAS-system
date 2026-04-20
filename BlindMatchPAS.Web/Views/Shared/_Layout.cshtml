@@ -34,11 +34,32 @@
                         </li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-navy fw-bold" asp-area="" asp-controller="Search" asp-action="Index">
+                                    <i class="bi bi-search me-1"></i> Advanced Search
+                                </a>
+                            </li>
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-navy fw-bold" asp-area="" asp-controller="Admin" asp-action="Index">
                                         <i class="bi bi-speedometer2 me-1"></i> Admin Dashboard
+                                    </a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Student"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-navy fw-bold" asp-area="" asp-controller="Student" asp-action="Index">
+                                        <i class="bi bi-journal-text me-1"></i> My Proposals
+                                    </a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Supervisor"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-navy fw-bold" asp-area="" asp-controller="Supervisor" asp-action="Index">
+                                        <i class="bi bi-person-workspace me-1"></i> Blind Dashboard
                                     </a>
                                 </li>
                             }

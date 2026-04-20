@@ -48,19 +48,27 @@ namespace BlindMatchPAS.Web.Controllers
         {
             if (string.IsNullOrWhiteSpace(name)) return RedirectToAction(nameof(ResearchAreas));
 
+            var adminUser = await _userManager.GetUserAsync(User);
             var area = new ResearchArea { Name = name.Trim() };
             _context.ResearchAreas.Add(area);
             await _context.SaveChangesAsync();
+
+            await AddAuditLog(adminUser?.Email ?? "System", "Create Research Area", $"Created new research area: {name.Trim()}");
+
             return RedirectToAction(nameof(ResearchAreas));
         }
 
         public async Task<IActionResult> DeleteResearchArea(int id)
         {
             var area = await _context.ResearchAreas.FindAsync(id);
+            var adminUser = await _userManager.GetUserAsync(User);
+
             if (area != null)
             {
+                string areaName = area.Name;
                 _context.ResearchAreas.Remove(area);
                 await _context.SaveChangesAsync();
+                await AddAuditLog(adminUser?.Email ?? "System", "Delete Research Area", $"Deleted research area: {areaName}");
             }
             return RedirectToAction(nameof(ResearchAreas));
         }
